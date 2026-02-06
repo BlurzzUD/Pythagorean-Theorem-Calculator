@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pythagorean Theorem Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .container {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 800px;
+        width: 100%;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 10px;
+        font-size: 2.5em;
+    }
+
+    .formula {
+        text-align: center;
+        font-size: 1.3em;
+        color: #667eea;
+        margin-bottom: 30px;
+        font-weight: bold;
+    }
+
+    .calculator {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-top: 30px;
+    }
+
+    .inputs-section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    label {
+        font-weight: 600;
+        color: #555;
+        font-size: 1.1em;
+    }
+
+    input {
+        padding: 12px 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1.1em;
+        transition: all 0.3s;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    input:disabled {
+        background: #f5f5f5;
+        cursor: not-allowed;
+    }
+
+    .result {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 15px;
+        border-radius: 8px;
+        font-size: 1.2em;
+        text-align: center;
+        font-weight: bold;
+        min-height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .visual-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .triangle-container {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+
+    .side-label {
+        font-size: 18px;
+        font-weight: bold;
+        fill: #333;
+    }
+
+    .calculation-steps {
+        margin-top: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        font-size: 0.95em;
+        color: #555;
+        line-height: 1.6;
+    }
+
+    button {
+        margin-top: 20px;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1.1em;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    button:hover {
+        transform: translateY(-2px);
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+    .language-selector {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        z-index: 100;
+    }
+
+    .language-selector select {
+        padding: 10px 15px;
+        border: 2px solid #667eea;
+        border-radius: 8px;
+        background: white;
+        color: #333;
+        font-size: 1em;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+
+    .language-selector select:hover {
+        background: #f8f9fa;
+    }
+
+    .language-selector select:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+
+    @media (max-width: 768px) {
+        .calculator {
+            grid-template-columns: 1fr;
+        }
+        
+        h1 {
+            font-size: 2em;
+        }
+
+        .language-selector {
+            position: relative;
+            top: 0;
+            right: 0;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <div class="language-selector">
+        <select id="languageSelect" onchange="changeLanguage()">
+            <option value="en">🇬🇧 English</option>
+            <option value="hu">🇭🇺 Magyar</option>
+            <option value="de">🇩🇪 Deutsch</option>
+            <option value="fr">🇫🇷 Français</option>
+            <option value="es">🇪🇸 Español</option>
+            <option value="no">🇳🇴 Norsk</option>
+            <option value="sv">🇸🇪 Svenska</option>
+            <option value="da">🇩🇰 Dansk</option>
+            <option value="zh">🇨🇳 简体中文</option>
+        </select>
+    </div>
+
+```
+<div class="container">
+    <h1>🔺 Pythagorean Theorem</h1>
+    <div class="formula">a² + b² = c²</div>
+
+    <div class="calculator">
+        <div class="inputs-section">
+            <div class="input-group">
+                <label for="sideA">Side a (leg):</label>
+                <input type="number" id="sideA" placeholder="Enter value" min="0" step="0.01">
+            </div>
+
+            <div class="input-group">
+                <label for="sideB">Side b (leg):</label>
+                <input type="number" id="sideB" placeholder="Enter value" min="0" step="0.01">
+            </div>
+
+            <div class="input-group">
+                <label for="sideC">Side c (hypotenuse):</label>
+                <input type="number" id="sideC" placeholder="Enter value" min="0" step="0.01">
+            </div>
+
+            <div class="result" id="result">
+                Enter any 2 values to calculate the 3rd
+            </div>
+
+            <button onclick="clearAll()">Clear All</button>
+        </div>
+
+        <div class="visual-section">
+            <div class="triangle-container">
+                <svg viewBox="0 0 300 300">
+                    <!-- Right triangle -->
+                    <polygon points="50,250 250,250 250,50" 
+                             fill="none" 
+                             stroke="#667eea" 
+                             stroke-width="3"/>
+                    
+                    <!-- Right angle indicator -->
+                    <path d="M 230,250 L 230,230 L 250,230" 
+                          fill="none" 
+                          stroke="#667eea" 
+                          stroke-width="2"/>
+                    
+                    <!-- Labels -->
+                    <text x="150" y="275" class="side-label" text-anchor="middle" id="labelA">a</text>
+                    <text x="270" y="150" class="side-label" text-anchor="start" id="labelB">b</text>
+                    <text x="140" y="140" class="side-label" text-anchor="middle" id="labelC">c</text>
+                </svg>
+            </div>
+
+            <div class="calculation-steps" id="steps">
+                <strong>How it works:</strong><br>
+                • Enter any two values (a, b, or c)<br>
+                • The calculator solves for the missing side<br>
+                • c is always the hypotenuse (longest side)
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Translation data
+    const translations = {
+        en: {
+            title: "Pythagorean Theorem",
+            sideA: "Side a (leg):",
+            sideB: "Side b (leg):",
+            sideC: "Side c (hypotenuse):",
+            enterValue: "Enter value",
+            enter2Values: "Enter any 2 values to calculate the 3rd",
+            clearAll: "Clear All",
+            howItWorks: "How it works:",
+            instruction1: "• Enter any two values (a, b, or c)",
+            instruction2: "• The calculator solves for the missing side",
+            instruction3: "• c is always the hypotenuse (longest side)",
+            calculating: "Calculating",
+            error: "Error:",
+            errorMustBeGreater: "The hypotenuse (c) must be longer than the other sides.",
+            result: "Side",
+            hypotenuse: "(hypotenuse)"
+        },
+        hu: {
+            title: "Pitagorasz-tétel",
+            sideA: "a oldal (befogó):",
+            sideB: "b oldal (befogó):",
+            sideC: "c oldal (átfogó):",
+            enterValue: "Adjon meg értéket",
+            enter2Values: "Adjon meg 2 értéket a 3. kiszámításához",
+            clearAll: "Összes törlése",
+            howItWorks: "Hogyan működik:",
+            instruction1: "• Adjon meg két értéket (a, b vagy c)",
+            instruction2: "• A kalkulátor kiszámítja a hiányzó oldalt",
+            instruction3: "• c mindig az átfogó (leghosszabb oldal)",
+            calculating: "Számítás",
+            error: "Hiba:",
+            errorMustBeGreater: "Az átfogónak (c) hosszabbnak kell lennie a többi oldalnál.",
+            result: "oldal",
+            hypotenuse: "(átfogó)"
+        },
+        de: {
+            title: "Satz des Pythagoras",
+            sideA: "Seite a (Kathete):",
+            sideB: "Seite b (Kathete):",
+            sideC: "Seite c (Hypotenuse):",
+            enterValue: "Wert eingeben",
+            enter2Values: "Geben Sie 2 Werte ein, um den 3. zu berechnen",
+            clearAll: "Alles löschen",
+            howItWorks: "So funktioniert es:",
+            instruction1: "• Geben Sie zwei beliebige Werte ein (a, b oder c)",
+            instruction2: "• Der Rechner berechnet die fehlende Seite",
+            instruction3: "• c ist immer die Hypotenuse (längste Seite)",
+            calculating: "Berechnung",
+            error: "Fehler:",
+            errorMustBeGreater: "Die Hypotenuse (c) muss länger sein als die anderen Seiten.",
+            result: "Seite",
+            hypotenuse: "(Hypotenuse)"
+        },
+        fr: {
+            title: "Théorème de Pythagore",
+            sideA: "Côté a (cathète):",
+            sideB: "Côté b (cathète):",
+            sideC: "Côté c (hypoténuse):",
+            enterValue: "Entrer une valeur",
+            enter2Values: "Entrez 2 valeurs pour calculer la 3ème",
+            clearAll: "Tout effacer",
+            howItWorks: "Comment ça marche:",
+            instruction1: "• Entrez deux valeurs (a, b ou c)",
+            instruction2: "• La calculatrice résout pour le côté manquant",
+            instruction3: "• c est toujours l'hypoténuse (côté le plus long)",
+            calculating: "Calcul",
+            error: "Erreur:",
+            errorMustBeGreater: "L'hypoténuse (c) doit être plus longue que les autres côtés.",
+            result: "Côté",
+            hypotenuse: "(hypoténuse)"
+        },
+        es: {
+            title: "Teorema de Pitágoras",
+            sideA: "Lado a (cateto):",
+            sideB: "Lado b (cateto):",
+            sideC: "Lado c (hipotenusa):",
+            enterValue: "Ingrese un valor",
+            enter2Values: "Ingrese 2 valores para calcular el 3°",
+            clearAll: "Borrar todo",
+            howItWorks: "Cómo funciona:",
+            instruction1: "• Ingrese dos valores cualesquiera (a, b o c)",
+            instruction2: "• La calculadora resuelve el lado faltante",
+            instruction3: "• c es siempre la hipotenusa (lado más largo)",
+            calculating: "Calculando",
+            error: "Error:",
+            errorMustBeGreater: "La hipotenusa (c) debe ser más larga que los otros lados.",
+            result: "Lado",
+            hypotenuse: "(hipotenusa)"
+        },
+        no: {
+            title: "Pythagoras' læresetning",
+            sideA: "Side a (katet):",
+            sideB: "Side b (katet):",
+            sideC: "Side c (hypotenus):",
+            enterValue: "Skriv inn verdi",
+            enter2Values: "Skriv inn 2 verdier for å beregne den 3.",
+            clearAll: "Tøm alt",
+            howItWorks: "Slik fungerer det:",
+            instruction1: "• Skriv inn to verdier (a, b eller c)",
+            instruction2: "• Kalkulatoren løser for den manglende siden",
+            instruction3: "• c er alltid hypotenusen (lengste side)",
+            calculating: "Beregner",
+            error: "Feil:",
+            errorMustBeGreater: "Hypotenusen (c) må være lengre enn de andre sidene.",
+            result: "Side",
+            hypotenuse: "(hypotenus)"
+        },
+        sv: {
+            title: "Pythagoras sats",
+            sideA: "Sida a (katet):",
+            sideB: "Sida b (katet):",
+            sideC: "Sida c (hypotenusa):",
+            enterValue: "Ange värde",
+            enter2Values: "Ange 2 värden för att beräkna det 3:e",
+            clearAll: "Rensa allt",
+            howItWorks: "Så fungerar det:",
+            instruction1: "• Ange två värden (a, b eller c)",
+            instruction2: "• Kalkylatorn löser den saknade sidan",
+            instruction3: "• c är alltid hypotenusan (längsta sidan)",
+            calculating: "Beräknar",
+            error: "Fel:",
+            errorMustBeGreater: "Hypotenusan (c) måste vara längre än de andra sidorna.",
+            result: "Sida",
+            hypotenuse: "(hypotenusa)"
+        },
+        da: {
+            title: "Pythagoras' sætning",
+            sideA: "Side a (katete):",
+            sideB: "Side b (katete):",
+            sideC: "Side c (hypotenuse):",
+            enterValue: "Indtast værdi",
+            enter2Values: "Indtast 2 værdier for at beregne den 3.",
+            clearAll: "Ryd alt",
+            howItWorks: "Sådan virker det:",
+            instruction1: "• Indtast to værdier (a, b eller c)",
+            instruction2: "• Lommeregneren løser den manglende side",
+            instruction3: "• c er altid hypotenusen (længste side)",
+            calculating: "Beregner",
+            error: "Fejl:",
+            errorMustBeGreater: "Hypotenusen (c) skal være længere end de andre sider.",
+            result: "Side",
+            hypotenuse: "(hypotenuse)"
+        },
+        zh: {
+            title: "勾股定理",
+            sideA: "边 a (直角边):",
+            sideB: "边 b (直角边):",
+            sideC: "边 c (斜边):",
+            enterValue: "输入数值",
+            enter2Values: "输入任意2个值来计算第3个",
+            clearAll: "全部清除",
+            howItWorks: "使用方法:",
+            instruction1: "• 输入任意两个值 (a, b 或 c)",
+            instruction2: "• 计算器会求解缺失的边",
+            instruction3: "• c 始终是斜边（最长边）",
+            calculating: "计算",
+            error: "错误:",
+            errorMustBeGreater: "斜边 (c) 必须长于其他边。",
+            result: "边",
+            hypotenuse: "(斜边)"
+        }
+    };
+
+    let currentLang = 'en';
+
+    const inputA = document.getElementById('sideA');
+    const inputB = document.getElementById('sideB');
+    const inputC = document.getElementById('sideC');
+    const result = document.getElementById('result');
+    const steps = document.getElementById('steps');
+    const labelA = document.getElementById('labelA');
+    const labelB = document.getElementById('labelB');
+    const labelC = document.getElementById('labelC');
+
+    let lastEdited = null;
+
+    function changeLanguage() {
+        currentLang = document.getElementById('languageSelect').value;
+        updateUIText();
+        calculate();
+    }
+
+    function updateUIText() {
+        const t = translations[currentLang];
+        
+        document.querySelector('h1').textContent = `🔺 ${t.title}`;
+        document.querySelector('label[for="sideA"]').textContent = t.sideA;
+        document.querySelector('label[for="sideB"]').textContent = t.sideB;
+        document.querySelector('label[for="sideC"]').textContent = t.sideC;
+        
+        inputA.placeholder = t.enterValue;
+        inputB.placeholder = t.enterValue;
+        inputC.placeholder = t.enterValue;
+        
+        document.querySelector('button').textContent = t.clearAll;
+    }
+
+    function calculate() {
+        const t = translations[currentLang];
+        const a = parseFloat(inputA.value);
+        const b = parseFloat(inputB.value);
+        const c = parseFloat(inputC.value);
+
+        // Count how many values are filled
+        const filled = [!isNaN(a), !isNaN(b), !isNaN(c)].filter(x => x).length;
+
+        if (filled < 2) {
+            result.textContent = t.enter2Values;
+            steps.innerHTML = `<strong>${t.howItWorks}</strong><br>${t.instruction1}<br>${t.instruction2}<br>${t.instruction3}`;
+            updateLabels('a', 'b', 'c');
+            return;
+        }
+
+        if (filled === 3) {
+            // All three filled - disable the last edited one
+            if (lastEdited === 'a') inputA.value = '';
+            else if (lastEdited === 'b') inputB.value = '';
+            else if (lastEdited === 'c') inputC.value = '';
+            calculate();
+            return;
+        }
+
+        let calculated;
+        let calculation;
+
+        // Calculate missing side
+        if (isNaN(a)) {
+            // Calculate a: a = √(c² - b²)
+            if (c <= b) {
+                result.textContent = `${t.error} c > b`;
+                steps.innerHTML = `<strong>${t.error}</strong><br>${t.errorMustBeGreater}`;
+                return;
+            }
+            calculated = Math.sqrt(c * c - b * b);
+            inputA.value = calculated.toFixed(2);
+            calculation = `<strong>${t.calculating} a:</strong><br>
+                           a² + b² = c²<br>
+                           a² + ${b}² = ${c}²<br>
+                           a² = ${c}² - ${b}²<br>
+                           a² = ${(c*c).toFixed(2)} - ${(b*b).toFixed(2)}<br>
+                           a² = ${(c*c - b*b).toFixed(2)}<br>
+                           a = √${(c*c - b*b).toFixed(2)}<br>
+                           <strong>a = ${calculated.toFixed(2)}</strong>`;
+            result.textContent = `${t.result} a = ${calculated.toFixed(2)}`;
+            updateLabels(calculated.toFixed(2), b, c);
+        } else if (isNaN(b)) {
+            // Calculate b: b = √(c² - a²)
+            if (c <= a) {
+                result.textContent = `${t.error} c > a`;
+                steps.innerHTML = `<strong>${t.error}</strong><br>${t.errorMustBeGreater}`;
+                return;
+            }
+            calculated = Math.sqrt(c * c - a * a);
+            inputB.value = calculated.toFixed(2);
+            calculation = `<strong>${t.calculating} b:</strong><br>
+                           a² + b² = c²<br>
+                           ${a}² + b² = ${c}²<br>
+                           b² = ${c}² - ${a}²<br>
+                           b² = ${(c*c).toFixed(2)} - ${(a*a).toFixed(2)}<br>
+                           b² = ${(c*c - a*a).toFixed(2)}<br>
+                           b = √${(c*c - a*a).toFixed(2)}<br>
+                           <strong>b = ${calculated.toFixed(2)}</strong>`;
+            result.textContent = `${t.result} b = ${calculated.toFixed(2)}`;
+            updateLabels(a, calculated.toFixed(2), c);
+        } else {
+            // Calculate c: c = √(a² + b²)
+            calculated = Math.sqrt(a * a + b * b);
+            inputC.value = calculated.toFixed(2);
+            calculation = `<strong>${t.calculating} c ${t.hypotenuse}:</strong><br>
+                           a² + b² = c²<br>
+                           ${a}² + ${b}² = c²<br>
+                           ${(a*a).toFixed(2)} + ${(b*b).toFixed(2)} = c²<br>
+                           ${(a*a + b*b).toFixed(2)} = c²<br>
+                           c = √${(a*a + b*b).toFixed(2)}<br>
+                           <strong>c = ${calculated.toFixed(2)}</strong>`;
+            result.textContent = `${t.result} c ${t.hypotenuse} = ${calculated.toFixed(2)}`;
+            updateLabels(a, b, calculated.toFixed(2));
+        }
+
+        steps.innerHTML = calculation;
+    }
+
+    function updateLabels(a, b, c) {
+        labelA.textContent = `a = ${a}`;
+        labelB.textContent = `b = ${b}`;
+        labelC.textContent = `c = ${c}`;
+    }
+
+    function clearAll() {
+        inputA.value = '';
+        inputB.value = '';
+        inputC.value = '';
+        lastEdited = null;
+        calculate();
+    }
+
+    inputA.addEventListener('input', () => {
+        lastEdited = 'a';
+        calculate();
+    });
+
+    inputB.addEventListener('input', () => {
+        lastEdited = 'b';
+        calculate();
+    });
+
+    inputC.addEventListener('input', () => {
+        lastEdited = 'c';
+        calculate();
+    });
+
+    // Initialize
+    updateUIText();
+    calculate();
+</script>
+```
+
+</body>
+</html>
